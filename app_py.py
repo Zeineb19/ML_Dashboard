@@ -252,3 +252,160 @@ if data:
         xgb_mae, xgb_rmse = metrics_df.loc[metrics_df['Model']=='XGBoost',['MAE','RMSE']].iloc[0]
         st.metric("XGBoost MAE", f"{xgb_mae:.8f}", f"RMSE: {xgb_rmse:.8f}")
     st.markdown("<br>", unsafe_allow_html=True)
+    # Tabs
+    tab1, tab2, tab3, tab4 = st.tabs(["OVERVIEW", "MODELS", "ANALYSIS", "DATA"])
+    
+    with tab1:
+        # Combined plot
+        st.plotly_chart(
+            create_combined_plot(rf_pred_df, svr_pred_df, xgb_pred_df),
+            use_container_width=True
+        )
+        
+        # Metrics comparison
+        st.plotly_chart(
+            create_metrics_comparison(metrics_df),
+            use_container_width=True
+        )
+    
+    with tab2:
+        st.markdown("### Individual Model Performance")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown(f"<h4 style='color: {COLORS['accent']}; font-family: \"Courier New\", monospace;'>RANDOM FOREST</h4>", unsafe_allow_html=True)
+            st.plotly_chart(
+                create_modern_plot(rf_pred_df, "RF Predictions", '#FF6B6B', 'Random Forest'),
+                use_container_width=True
+            )
+            st.plotly_chart(
+                create_feature_importance_plot(rf_imp_df, "Feature Importance", '#FF6B6B'),
+                use_container_width=True
+            )
+        
+        with col2:
+            st.markdown(f"<h4 style='color: {COLORS['accent']}; font-family: \"Courier New\", monospace;'>SVR</h4>", unsafe_allow_html=True)
+            st.plotly_chart(
+                create_modern_plot(svr_pred_df, "SVR Predictions", '#4ECDC4', 'SVR'),
+                use_container_width=True
+            )
+            st.plotly_chart(
+                create_feature_importance_plot(svr_imp_df, "Feature Importance", '#4ECDC4'),
+                use_container_width=True
+            )
+        
+        with col3:
+            st.markdown(f"<h4 style='color: {COLORS['accent']}; font-family: \"Courier New\", monospace;'>XGBOOST</h4>", unsafe_allow_html=True)
+            st.plotly_chart(
+                create_modern_plot(xgb_pred_df, "XGBoost Predictions", '#FFE66D', 'XGBoost'),
+                use_container_width=True
+            )
+            st.plotly_chart(
+                create_feature_importance_plot(xgb_imp_df, "Feature Importance", '#FFE66D'),
+                use_container_width=True
+            )
+    
+    with tab3:
+        st.markdown("### DETAILED METRICS")
+        
+        # Format the dataframe for better display
+        display_df = metrics_df.copy()
+        display_df['MAE'] = display_df['MAE'].apply(lambda x: f'{x:.8f}')
+        display_df['RMSE'] = display_df['RMSE'].apply(lambda x: f'{x:.8f}')
+        display_df['MAE_Percentage'] = display_df['MAE_Percentage'].apply(lambda x: f'{x:.4f}%')
+        
+        st.dataframe(
+            display_df,
+            use_container_width=True,
+            height=200
+        )
+        
+        st.markdown("### ERROR STATISTICS")
+        
+        # Error analysis
+        rf_errors = (rf_pred_df['actual'] - rf_pred_df['predicted']) * np.sqrt(252)
+        svr_errors = (svr_pred_df['actual'] - svr_pred_df['predicted']) * np.sqrt(252)
+        xgb_errors = (xgb_pred_df['actual'] - xgb_pred_df['predicted']) * np.sqrt(252)
+        
+        error_stats = pd.DataFrame({
+            'Statistic': ['Mean Error', 'Std Deviation', 'Min Error', 'Max Error'],
+            'Random Forest': [
+                f'{rf_errors.mean():.8f}',
+                f'{rf_errors.std():.8f}',
+                f'{rf_errors.min():.8f}',
+                f'{rf_errors.max():.8f}'
+            ],
+            'SVR': [
+                f'{svr_errors.mean():.8f}',
+                f'{svr_errors.std():.8f}',
+                f'{svr_errors.min():.8f}',
+                f'{svr_errors.max():.8f}'
+            ],
+            'XGBoost': [
+                f'{xgb_errors.mean():.8f}',
+                f'{xgb_errors.std():.8f}',
+                f'{xgb_errors.min():.8f}',
+                f'{xgb_errors.max():.8f}'
+            ]
+        })
+        
+        st.dataframe(error_stats, use_container_width=True)
+    
+    with tab4:
+        st.markdown("### EXPORT DATA")
+        
+        col1, col2 = st.columns(2)
+        
+        # Prepare download data
+        download_df = pd.DataFrame({
+            'date': rf_pred_df['date'],
+            'actual': rf_pred_df['actual'],
+            'predicted_rf': rf_pred_df['predicted'],
+            'predicted_svr': svr_pred_df['predicted'],
+            'predicted_xgb': xgb_pred_df['predicted']
+        })
+        
+        with col1:
+            st.download_button(
+                label="↓ Download Predictions",
+                data=download_df.to_csv(index=False).encode('utf-8'),
+                file_name=f"{selected_pair.replace('/', '_')}_predictions.csv",
+                mime='text/csv',
+            )
+        
+        with col2:
+            st.download_button(
+                label="↓ Download Metrics",
+                data=metrics_df.to_csv(index=False).encode('utf-8'),
+                file_name=f"{selected_pair.replace('/', '_')}_metrics.csv",
+                mime='text/csv',
+            )
+        
+        st.markdown("### DATA PREVIEW")
+        
+        preview_option = st.radio(
+            "Select data to preview:",
+            ["Predictions", "Metrics", "RF Features", "SVR Features", "XGB Features"],
+            horizontal=True
+        )
+        
+        if preview_option == "Predictions":
+            st.dataframe(download_df, use_container_width=True, height=400)
+        elif preview_option == "Metrics":
+            st.dataframe(metrics_df, use_container_width=True, height=400)
+        elif preview_option == "RF Features":
+            st.dataframe(rf_imp_df, use_container_width=True, height=400)
+        elif preview_option == "SVR Features":
+            st.dataframe(svr_imp_df, use_container_width=True, height=400)
+        else:
+            st.dataframe(xgb_imp_df, use_container_width=True, height=400)
+
+st.markdown(f"""
+<div style='text-align: center; padding: 2rem 0; margin-top: 3rem; border-top: 1px solid rgba(0, 217, 255, 0.2);'>
+    <p style='color: {COLORS["text"]}; opacity: 0.7; font-size: 0.85rem; font-family: "Courier New", monospace;'>
+        FX VOLATILITY PREDICTOR | 2024 | POWERED BY MACHINE LEARNING
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
