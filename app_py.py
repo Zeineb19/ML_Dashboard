@@ -2,14 +2,7 @@
 import shutil
 import os
 
-# Créer un dossier de partage
-share_folder = "ML_Dashboard"
-os.makedirs(share_folder, exist_ok=True)
 
-# Copier les fichiers nécessaires
-shutil.copy("app_py.py", share_folder)
-shutil.copytree("exchange_rate_results", 
-                os.path.join(share_folder, "exchange_rate_results"))
 
 # Créer un fichier requirements.txt
 with open(os.path.join(share_folder, "requirements.txt"), "w") as f:
