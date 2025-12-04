@@ -152,7 +152,12 @@ def load_data(pair_name):
         rf_imp_df = pd.read_csv(os.path.join(pair_dir, "metrics", "random_forest_feature_importance.csv"))
         svr_imp_df = pd.read_csv(os.path.join(pair_dir, "metrics", "svr_feature_importance.csv"))
         xgb_imp_df = pd.read_csv(os.path.join(pair_dir, "metrics", "xgboost_feature_importance.csv"))
+        
         return metrics_df, rf_pred_df, svr_pred_df, xgb_pred_df, rf_imp_df, svr_imp_df, xgb_imp_df
+        f_pred_df = pd.read_csv(os.path.join(pair_dir, "predictions", "random_forest_predictions.csv"), parse_dates=['date'])
+    except FileNotFoundError:
+        rf_pred_df = pd.DataFrame()
+        st.warning("Random Forest predictions not found for this pair.")
     except FileNotFoundError as e:
         st.error(f"❌ Could not find results for {pair_name}. Error: {e}")
         return None
