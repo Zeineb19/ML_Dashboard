@@ -7,7 +7,7 @@ share_folder = "C:/ML/FX_Dashboard_Package"
 os.makedirs(share_folder, exist_ok=True)
 
 # Copier les fichiers nécessaires
-shutil.copy("app.py", share_folder)
+shutil.copy("app_py.py", share_folder)
 shutil.copytree("exchange_rate_results", 
                 os.path.join(share_folder, "exchange_rate_results"))
 
