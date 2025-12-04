@@ -31,7 +31,7 @@ INSTALLATION:
 
 USAGE:
 1. Open terminal in this folder
-2. Run: streamlit run app.py
+2. Run: streamlit run app_py.py
 3. Open browser at: http://localhost:8501
 
 REQUIREMENTS:
