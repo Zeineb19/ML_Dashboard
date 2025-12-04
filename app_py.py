@@ -251,4 +251,4 @@ if data:
     with col3:
         xgb_mae, xgb_rmse = metrics_df.loc[metrics_df['Model']=='XGBoost',['MAE','RMSE']].iloc[0]
         st.metric("XGBoost MAE", f"{xgb_mae:.8f}", f"RMSE: {xgb_rmse:.8f}")
-    st.markdown("<br>", unsafe_allow_html=True
+    st.markdown("<br>", unsafe_allow_html=True)
