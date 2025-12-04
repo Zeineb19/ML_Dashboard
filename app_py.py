@@ -3,7 +3,7 @@ import shutil
 import os
 
 # Créer un dossier de partage
-  share_folder = "ML_Dashboard"
+share_folder = "ML_Dashboard"
 os.makedirs(share_folder, exist_ok=True)
 
 # Copier les fichiers nécessaires
