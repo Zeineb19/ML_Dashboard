@@ -1,0 +1,2 @@
+model,timestamp,best_params,features,train_size,val_size,test_size,train_mae,train_rmse,val_mae,val_rmse,test_mae,test_rmse,test_mae_pct
+Random Forest,2025-12-04 20:50:32,"{'n_estimators': 200, 'min_samples_split': 10, 'min_samples_leaf': 6, 'max_samples': 0.7, 'max_features': 0.5, 'max_depth': 6}","['vol_lag1', 'roll_std_20', 'ewm_vol', 'roll_std_30']",921,90,260,0.00017410934516040995,0.00026693109182657036,0.00028380148060293557,0.0004290931172132515,0.00022995103476298507,0.0003451012706054977,3.7714222969032396

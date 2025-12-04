@@ -1,0 +1,2 @@
+model,timestamp,best_params,best_iteration,features,train_size,val_size,test_size,train_mae,train_rmse,val_mae,val_rmse,test_mae,test_rmse,test_mae_pct
+XGBoost,2025-12-04 20:48:19,"{'subsample': 0.8, 'n_estimators': 200, 'min_child_weight': 3, 'max_depth': 4, 'learning_rate': 0.05, 'gamma': 0, 'colsample_bytree': 1.0}",159,"['vol_lag1', 'roll_std_20', 'abs_return_ma5', 'ewm_vol', 'roll_std_30']",921,90,260,0.00015341105843063842,0.000219176575702624,0.0001840400922830342,0.00025838787783307116,0.00019146910995470595,0.0002653816475921504,3.9689074957762798

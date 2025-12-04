@@ -1,0 +1,6 @@
+feature,importance,importance_pct
+ewm_vol,0.3375847,33.75847
+roll_std_20,0.32291606,32.291607
+vol_lag1,0.27220994,27.220995
+roll_std_30,0.06728929,6.7289295
+abs_return_ma5,0.0,0.0

@@ -1,0 +1,2 @@
+model,timestamp,best_params,features,train_size,val_size,test_size,train_mae,train_rmse,val_mae,val_rmse,test_mae,test_rmse,test_mae_pct
+SVR,2025-12-04 20:49:57,"{'kernel': 'rbf', 'gamma': np.float64(0.025118864315095822), 'epsilon': np.float64(0.00046415888336127773), 'C': np.float64(0.23101297000831592)}","['vol_lag1', 'roll_std_20', 'abs_return_ma5', 'ewm_vol', 'roll_std_30']",921,90,260,0.00026436454433816797,0.0003385303173180916,0.0002588374395849352,0.0003187987762411047,0.00024089799202750594,0.0003093054356991485,5.0762191788722015
