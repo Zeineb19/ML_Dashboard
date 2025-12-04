@@ -1,28 +1,48 @@
-import shutil
+import streamlit as st
+import pandas as pd
+import plotly.express as px
 import os
 
-# 1️⃣ Créer le dossier
-share_folder = "ML_Dashboard"
-os.makedirs(share_folder, exist_ok=True)
+# -----------------------------
+#    FX VOLATILITY DASHBOARD
+# -----------------------------
 
-# 2️⃣ Créer requirements.txt
-with open(os.path.join(share_folder, "requirements.txt"), "w") as f:
-    f.write("""streamlit==1.28.0
-pandas==2.1.0
-numpy==1.24.3
-plotly==5.17.0
-scikit-learn
-""")
+st.title("FX Volatility Dashboard")
+st.write("Select an exchange rate to visualize its historical trend.")
 
-# 3️⃣ Créer README.md
-with open(os.path.join(share_folder, "README.md"), "w") as f:
-    f.write("""# FX VOLATILITY DASHBOARD
+# 1️⃣ List all available CSV files inside exchange_rate_results
+data_folder = "exchange_rate_results"
 
-## INSTALLATION
-1. Install Python 3.8+
-2. Open terminal/command prompt
-3. Run: pip install -r requirements.txt
+files = [f for f in os.listdir(data_folder) if f.endswith(".csv")]
 
-## USAGE
-```bash
-streamlit run app.py
+if not files:
+    st.error("❌ No CSV files found in exchange_rate_results folder.")
+else:
+    selected_file = st.selectbox("Choose an exchange rate:", files)
+
+    #  Load selected dataset
+    df = pd.read_csv(os.path.join(data_folder, selected_file))
+
+    # Normalize column names
+    df.columns = [c.lower() for c in df.columns]
+
+    # Expected structure: date / close
+    if "date" not in df.columns or "close" not in df.columns:
+        st.error(f"❌ File {selected_file} must contain 'Date' and 'Close' columns.")
+    else:
+        # Convert date column
+        df["date"] = pd.to_datetime(df["date"])
+
+        #  Plot
+        fig = px.line(
+            df,
+            x="date",
+            y="close",
+            title=f"📈 {selected_file.replace('.csv','').upper()} Exchange Rate",
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+        #  Display dataframe
+        with st.expander("📄 Show raw data"):
+            st.dataframe(df)
